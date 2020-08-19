@@ -1,5 +1,5 @@
 ---
-layout: article
+layout: page
 Title: Creating an Image Steganography & Network Forensics Challenge for Securi-Tay 2020
 modified: 2020-06-03
 categories: blog-post

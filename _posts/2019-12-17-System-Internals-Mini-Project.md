@@ -1,5 +1,5 @@
 ---
-layout: article
+layout: page
 Title: System Internals - Mini Project
 modified: 2019-12-17
 categories: university-projects year-4
