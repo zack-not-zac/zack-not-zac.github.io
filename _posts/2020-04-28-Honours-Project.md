@@ -1,13 +1,12 @@
 ---
 layout: page
-Title: Natural Language Passwords - Using Natural Language Processing to Create Efficient Customised Wordlists
+Title: Honours Project
 categories: university-projects year-4
 modified: 2020-04-28
 permalink: honours-project
 ---
 
-### Honours Project
-#### Natural Language Passwords - Using Natural Language Processing to Create Efficient Customised Wordlists
+### Natural Language Passwords - Using Natural Language Processing To Create Personalised Password Wordlists 
 
 If you cannot view the PDF below, click [here]({{site.url}}/papers/Hons-Project-For-Website.pdf).
 
