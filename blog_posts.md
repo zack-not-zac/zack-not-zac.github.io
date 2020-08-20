@@ -1,6 +1,6 @@
 ---
 layout: collection
-collection: posts
+collection: blog_posts
 title: Blog Posts
 permalink: /blog-posts/
 sort_by: date

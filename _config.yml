@@ -57,6 +57,10 @@ collections:
     output: true
     title: University Projects
     permalink: /university-projects/:path/
+  blog_posts:
+    output: true
+    title: Blog Posts
+    permalink: /blog-posts/:path/
 
 # Exclude from processing.
 exclude:

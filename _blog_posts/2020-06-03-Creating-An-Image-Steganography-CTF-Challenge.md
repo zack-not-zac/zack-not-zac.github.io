@@ -3,6 +3,7 @@ layout: page
 Title: Creating an Image Steganography & Network Forensics Challenge for Securi-Tay 2020
 modified: 2020-06-03
 categories: blog-post
+permalink: Securi-Tay_2020_Image_Steganography
 excerpt: How to create an image steganography CTF challenge based on my "Secret Communications" challenge for Securi-Tay 2020.
 ---
 
