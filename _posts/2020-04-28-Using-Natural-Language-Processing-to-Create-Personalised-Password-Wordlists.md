@@ -1,5 +1,5 @@
 ---
-layout: article
+layout: page
 Title: Natural Language Passwords - Using Natural Language Processing to Create Efficient Customised Wordlists
 categories: university-projects year-4
 modified: 2020-04-28
