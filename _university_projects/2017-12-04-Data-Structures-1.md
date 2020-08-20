@@ -7,7 +7,7 @@ categories: university-projects year-2
 
 ### CMP201 - Comparing Bubble and Radix sorting algorithms
 
-Code for this project can be found [here]({{ site.baseurl }}{% post_url /code-snippets/2017-12-04-Data-Structures-1-code %}).
+Code for this project can be found [here]({{ site.url }}/code-snippets/2017-12-04-Data-Structures-1-code).
 
 If you cannot view the PDF below, click [here]({{site.url}}/papers/Sorting-Algorithms.pdf)
 

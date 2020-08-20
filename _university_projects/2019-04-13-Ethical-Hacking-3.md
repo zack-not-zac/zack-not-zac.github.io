@@ -5,7 +5,7 @@ modified: 2018-12-04
 categories: university-projects year-3
 ---
 
-### CMP319 - Vulnerable Media Player Report
+### CMP320 - Vulnerable Media Player Report
 
 If you cannot view the PDF below, click [here]({{site.url}}/papers/eh3-report.pdf).
 
