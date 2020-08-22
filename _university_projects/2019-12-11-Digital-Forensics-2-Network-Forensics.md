@@ -1,5 +1,5 @@
 ---
-layout: article
+layout: page
 Title: Digital Forensics 2 - Network Forensics
 modified: 2019-12-11
 categories: university-projects year-4

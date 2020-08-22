@@ -1,5 +1,5 @@
 ---
-layout: article
+layout: page
 Title: Engineering Resilient Systems Part 3 - Human-Focused Security
 categories: university-projects year-4
 modified: 2020-05-05

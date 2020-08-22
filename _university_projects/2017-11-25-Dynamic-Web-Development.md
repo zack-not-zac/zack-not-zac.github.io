@@ -1,5 +1,5 @@
 ---
-layout: article
+layout: page
 Title: Dynamic Web Development
 modified: 2017-11-25
 categories: university-projects year-2

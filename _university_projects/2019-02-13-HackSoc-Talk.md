@@ -1,5 +1,5 @@
 ---
-layout: article
+layout: page
 Title: HackSoc Talk
 modified: 2018-12-04
 categories: university-projects year-3

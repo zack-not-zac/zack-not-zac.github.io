@@ -1,5 +1,5 @@
 ---
-layout: article
+layout: page
 Title: Digital Forensics 2 - Mobile Forensics
 modified: 2019-11-05
 categories: university-projects year-4

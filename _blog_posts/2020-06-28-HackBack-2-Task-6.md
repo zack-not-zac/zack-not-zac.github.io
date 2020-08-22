@@ -1,5 +1,5 @@
 ---
-layout: article
+layout: page
 Title: HackBack2 Task 6 - Checks Walkthrough
 categories: blog-post tryhackme
 modified: 2020-06-28

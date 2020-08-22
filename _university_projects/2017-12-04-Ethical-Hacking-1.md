@@ -1,5 +1,5 @@
 ---
-layout: article
+layout: page
 Title: Ethical Hacking 1
 modified: 2017-12-04
 categories: university-projects year-2

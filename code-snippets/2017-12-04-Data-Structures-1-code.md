@@ -1,5 +1,5 @@
 ---
-layout: article
+layout: page
 Title: Data Structures 1
 modified: 2017-04-12
 categories: university-projects year-2 code

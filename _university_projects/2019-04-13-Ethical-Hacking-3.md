@@ -1,5 +1,5 @@
 ---
-layout: article
+layout: page
 Title: Ethical Hacking 3
 modified: 2018-12-04
 categories: university-projects year-3

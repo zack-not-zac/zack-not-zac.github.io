@@ -1,5 +1,5 @@
 ---
-layout: article
+layout: page
 Title: PeekingDuck
 modified: 2019-04-30
 categories: university-projects year-3

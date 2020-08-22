@@ -14,7 +14,7 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 lang: en-US
-title: Zack-Not-Zac.github.io
+title: Zack-Not-Zac.GitHub.io
 email: zack.a@myself.com
 description: "Zack-Not-Zac - Cyber Security Blog"
 baseurl: # the optional subpath of your site, e.g. "/blog"
@@ -22,7 +22,7 @@ url: https://zack-not-zac.github.io # the base hostname & protocol for your site
 author:
   name: Zack Anderson
   twitter: Zack_Not_Zac
-  picture: /images/profiler.jpg
+  picture: /images/profiler-cropped.png
 twitter_username: Zack_Not_Zac
 github_username: zack-not-zac
 linkedin_username: zack-not-zac

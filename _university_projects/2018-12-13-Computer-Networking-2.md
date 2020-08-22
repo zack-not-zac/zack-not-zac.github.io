@@ -1,5 +1,5 @@
 ---
-layout: article
+layout: page
 Title: Computer Networking 2
 modified: 2018-12-13
 categories: university-projects year-3

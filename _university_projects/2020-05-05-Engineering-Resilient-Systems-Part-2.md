@@ -1,5 +1,5 @@
 ---
-layout: article
+layout: page
 Title: Engineering Resilient Systems Part 2 - Machine Learning
 categories: university-projects year-4
 modified: 2020-05-05

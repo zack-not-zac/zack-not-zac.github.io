@@ -1,5 +1,5 @@
 ---
-layout: article
+layout: page
 Title: Engineering Resilient Systems Part 1 - Secure Coding Practises
 categories: university-projects year-4
 modified: 2020-05-05
