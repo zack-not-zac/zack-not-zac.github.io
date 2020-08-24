@@ -5,7 +5,7 @@ title: Home
 <main class="page-content" aria-label="Content">
     <div class="entry-wrap" id="fadein">
         <div id="Profiler">
-            <img src="{{ site.url }}/images/profiler-cropped.png" width="25%" height="25%" class="align-center" alt="Profile Image" style="border-radius: 50%;">
+            <img src="{{ site.author.picture }}" width="25%" height="25%" class="align-center" alt="Profile Image" style="border-radius: 50%;">
         </div>
         <div style="margin-left:10%; margin-right:10%" id="Description">
             <h3 style="margin-top:20px;" class="text-center">I'm Zack, a BSc Ethical Hacking Graduate.</h3>
