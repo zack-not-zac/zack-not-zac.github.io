@@ -8,4 +8,4 @@ sort_order: reverse
 entries_layout: grid
 ---
 
-I have now added the ability to search through my papers to make finding them easier.
+I've now added the ability to search through my papers to make finding them easier.
