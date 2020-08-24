@@ -7,15 +7,19 @@
   <!-- For fade in transition -->
   <style> 
     #fadein{ 
-        opacity: 0; 
-        transition: opacity 2s; 
-    } 
+      animation: fadein 2s;
+    }
+    
+    @keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+    }
   </style>
-  <script>
+  <!-- <script>
     window.onload = function(){
     document.getElementById('fadein').style.opacity = 1;
     }
-  </script>
+  </script> -->
 
   {% if site.plugins contains 'jekyll-seo-tag' or site.gems contains 'jekyll-seo-tag' %}
     {% comment %}
