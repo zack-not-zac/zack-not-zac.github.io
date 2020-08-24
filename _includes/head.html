@@ -4,6 +4,19 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- For fade in transition -->
+  <style> 
+    #fadein{ 
+        opacity: 0; 
+        transition: opacity 2s; 
+    } 
+  </style>
+  <script>
+    window.onload = function(){
+    document.getElementById('fadein').style.opacity = 1;
+    }
+  </script>
+
   {% if site.plugins contains 'jekyll-seo-tag' or site.gems contains 'jekyll-seo-tag' %}
     {% comment %}
       Add metadata for search engines and social networks if jekyll-seo-tag plugin is enabled
