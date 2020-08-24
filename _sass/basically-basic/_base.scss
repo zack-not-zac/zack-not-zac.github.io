@@ -11,6 +11,18 @@ body {
   color: $text-color;
 }
 
+// For fade in animation
+#fadein{ 
+  animation: fadein 3s;
+}
+
+@keyframes fadein {
+  0% { opacity: 0; }
+  /* Creates ~1 second delay before fading in to allow page assets to load */
+  34% { opacity: 0;}
+  100%   { opacity: 1; }
+}
+
 blockquote,
 q {
   color: tint($text-color, 40%);
