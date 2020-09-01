@@ -3,7 +3,7 @@ layout: page
 Title: Honours Project
 categories: university-projects year-4
 modified: 2020-04-28
-permalink: honours-project
+permalink: dissertation
 ---
 
 ### Natural Language Passwords - Using Natural Language Processing To Create Personalised Password Wordlists 
