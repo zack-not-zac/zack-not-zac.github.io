@@ -8,7 +8,7 @@ title: Home
             <img src="{{ site.author.picture }}" width="25%" height="25%" class="align-center" alt="Profile Image" style="border-radius: 50%;">
         </div>
         <div style="margin-left:10%; margin-right:10%" id="Description">
-            <h3 style="margin-top:20px;" class="text-center">I'm Zack, a BSc Ethical Hacking Graduate.</h3>
+            <h3 style="margin-top:20px;" class="text-center">I'm Zack, a BSc Ethical Hacking Graduate & SOC Analyst.</h3>
             <h3 class="text-center">Here you will find blog posts for some projects I've worked on, as well as papers from various university modules.</h3>
             <div id="buttons" style="width: 25%; margin: 0 auto">
                 <div id="btn-email" style="margin-left: 20px; margin-top: 5px; float: left;">
