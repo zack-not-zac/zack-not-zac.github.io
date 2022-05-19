@@ -1,7 +1,7 @@
 ---
 layout: page
 Title: Useful Splunk Searches for AWS & Windows threat hunting
-modified: 2022-03-20
+modified: 2022-05-19
 categories: blog-post
 permalink: Splunk-Threat-Hunting
 excerpt: Includes useful Splunk searches I've used for enriching investigations & threat hunting during my time working in a SOC.
