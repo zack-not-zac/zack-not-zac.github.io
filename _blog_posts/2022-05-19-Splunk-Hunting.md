@@ -9,96 +9,6 @@ excerpt: Includes useful Splunk searches I've used for enriching investigations 
 
 Below are a few searches I have made while investigating security events using Splunk. These are not all perfect & may require some modification depending on Splunk instance setup.
 
-## AWS CloudTrail Searches
-
-### General Activity
-```
-index=*aws* sourcetype="aws:cloudtrail" "USERNAME"
-| iplocation sourceIPAddress
-| stats earliest(_time) as earliest latest(_time) as latest values(user) values(user_id) values(sourceIPAddress) values(signature) values(userAgent) values(Country) count by eventName
-| rename values(*) as *
-| sort - latest
-| convert ctime(earliest) ctime(latest) timeformat="%d/%m/%y %H:%M:%S"
-| table earliest latest user user_id sourceIPAddress Country eventName signature userAgent count
-```
-
-### CreateRole Details
-```
-index=*aws* sourcetype=aws:cloudtrail eventName=CreateRole "ROLE"
-| stats earliest(_time) as earliest latest(_time) as latest values(userIdentity.principalId) as SourceUser values(responseElements.role.roleName) as CreatedRole values(responseElements.role.createDate) as Timestamp values(region) as Region count by eventName status src responseElements.role.roleName
-| sort - latest
-| convert ctime(earliest) ctime(latest) timeformat="%d/%m/%y %H:%M:%S"
-| table earliest latest SourceUser eventName status src CreatedRole Timestamp count
-```
- 
-### CreateSecurityGroup
-```
-index=*aws* sourcetype=aws:cloudtrail eventName=CreateSecurityGroup "GROUP_ID"
-| stats earliest(_time) as earliest latest(_time) as latest values(userIdentity.sessionContext.attributes.mfaAuthenticated) as UsedMFA values(requestParameters.groupName) as Group_Name values(requestParameters.groupDescription) as Description values(region) as Region count by eventName user responseElements.groupId
-| sort - latest
-| convert ctime(earliest) ctime(latest) timeformat="%d/%m/%y %H:%M:%S"
-| table earliest latest user eventName UsedMFA Group_Name Description count
-```
-
-### Rule Policy Changes
-```
-index=*aws* sourcetype=aws:cloudtrail eventName IN (DeleteRolePolicy, UpdateAssumeRolePolicy) "*USER"
-| stats Earliest(_time) as Earliest Latest(_time) as Latest values(requestParameters.policyName) as Policy values(requestParameters.policyDocument) as Policy_Document count by userName awsRegion eventName requestParameters.roleName
-| fillnull value="N/A"
-| sort - latest
-| convert ctime(Earliest) ctime(Latest) timeformat="%H:%M:%S %d/%m/%y"
-```
-
-### PutRolePolicy
-```
-index=*aws* sourcetype=aws:cloudtrail eventName=PutRolePolicy userName="*USER"
-| table _time user_arn userName src_ip user_agent errorCode app eventName msg requestParameters.roleName requestParameters.policyName object requestParameters.policyDocument recipientAccountId
-| sort -_time
-```
-
-### AuthorizeSecurityGroupIngress/Egress
-```
-index=*aws* sourcetype=aws:cloudtrail eventName IN ("*SecurityGroupIngress", "*SecurityGroupEgress", "CreateSecurityGroup", "DeleteSecurityGroup") ("*USER*")
-| iplocation sourceIPAddress
-| rename requestParameters.securityGroupRuleIds.items{}.securityGroupRuleId as requestRuleId, responseElements.securityGroupRuleSet.items{}.securityGroupRuleId as responseRuleId, userIdentity.principalId as PrincipalID
-| eval RuleID=if(eventName=="RevokeSecurityGroupIngress",requestRuleId, responseRuleId)
-| stats  earliest(_time) as Earliest latest(_time) as Latest values(userIdentity.type) as LoginType values(userName) as ActualUser values(userAgent) as UserAgent values(msg) as Status values(requestParameters.groupId) as GroupID values(sourceIPAddress) as SourceIP values(requestParameters.ipPermissions.items{}.ipRanges.items{}.cidrIp) as CIDR values(requestParameters.ipPermissions.items{}.fromPort) as Source_Port values(requestParameters.ipPermissions.items{}.toPort) as Dest_Port values(requestParameters.ipPermissions.items{}.ipRanges.items{}.description) as Rule_Description values(RuleID) as RuleID by eventName aws_account_id PrincipalID userIdentity.accessKeyId
-| sort - latest
-| convert ctime(Earliest) ctime(Latest)
-| fields Earliest Latest aws_account_id eventName GroupID CIDR Source_Port Dest_Port Rule_Description RuleID ActualUser LoginType Status SourceIP PrincipalID userIdentity.accessKeyId
-| fillnull value="N/A"
-```
-
-### ChangePassword
-```
-index=*aws* sourcetype=aws:cloudtrail eventName=ChangePassword "*USER*"
-| table _time userIdentity.arn userName userIdentity.sessionContext.attributes.mfaAuthenticated
-| rename _time AS Time userIdentity.arn AS ARN userName as User userIdentity.sessionContext.attributes.mfaAuthenticated as Used_MFA
-| convert ctime(Time) timeformat="%H:%M:%S %d/%m/%y"
-```
-
-### PutBucketPublicAccessBlock
-```
-index=*aws* sourcetype="aws:cloudtrail" eventName=PutBucketPublicAccessBlock requestParameters.bucketName="BUCKET"
-| table _time eventName userIdentity.accessKeyId user userIdentity.sessionContext.sessionIssuer.userName userIdentity.sessionContext.attributes.mfaAuthenticated requestParameters.bucketName requestParameters.PublicAccessBlockConfiguration* user_agent
-| rename userIdentity.sessionContext.sessionIssuer.userName as AssumedRole userIdentity.sessionContext.attributes.mfaAuthenticated as UsedMFA
-```
-
-### AssumeRole
-```
-index=*aws* sourcetype=aws:cloudtrail eventName IN (AssumeRole) requestParameters.roleSessionName="ROLE_NAME"
-| stats earliest(_time) as earliest latest(_time) as latest values(responseElements.credentials.accessKeyId) as accessKey latest(responseElements.credentials.expiration) as expires by userName action
-| sort - latest
-| convert ctime(earliest) ctime(latest) timeformat="%d/%m/%y %H:%M:%S"
-```
-
-### Instance Information
-```
-index=*aws* sourcetype=aws:cloudtrail eventName IN ("RunInstances") "INSTANCE_ID"
-| fields responseElements.instancesSet.items{}.groupSet.items{}.groupName requestParameters.iamInstanceProfile.name responseElements.instancesSet.items{}.instanceId
-| rename responseElements.instancesSet.items{}.instanceId as instance responseElements.instancesSet.items{}.groupSet.items{}.groupName as instanceGroup requestParameters.iamInstanceProfile.name as instanceName
-```
-
 ## Windows Security Event Log Searches
 
 ### General Activity
@@ -199,6 +109,96 @@ BY All_Traffic.dest All_Traffic.src All_Traffic.user All_Traffic.action sourcety
 | rename values(DNS.*) as *, DNS.* as *
 | sort - latest
 | convert ctime(earliest) ctime(latest) timeformat="%d/%m/%y %H:%M:%S"
+```
+
+## AWS CloudTrail Searches
+
+### General Activity
+```
+index=*aws* sourcetype="aws:cloudtrail" "USERNAME"
+| iplocation sourceIPAddress
+| stats earliest(_time) as earliest latest(_time) as latest values(user) values(user_id) values(sourceIPAddress) values(signature) values(userAgent) values(Country) count by eventName
+| rename values(*) as *
+| sort - latest
+| convert ctime(earliest) ctime(latest) timeformat="%d/%m/%y %H:%M:%S"
+| table earliest latest user user_id sourceIPAddress Country eventName signature userAgent count
+```
+
+### CreateRole Details
+```
+index=*aws* sourcetype=aws:cloudtrail eventName=CreateRole "ROLE"
+| stats earliest(_time) as earliest latest(_time) as latest values(userIdentity.principalId) as SourceUser values(responseElements.role.roleName) as CreatedRole values(responseElements.role.createDate) as Timestamp values(region) as Region count by eventName status src responseElements.role.roleName
+| sort - latest
+| convert ctime(earliest) ctime(latest) timeformat="%d/%m/%y %H:%M:%S"
+| table earliest latest SourceUser eventName status src CreatedRole Timestamp count
+```
+ 
+### CreateSecurityGroup
+```
+index=*aws* sourcetype=aws:cloudtrail eventName=CreateSecurityGroup "GROUP_ID"
+| stats earliest(_time) as earliest latest(_time) as latest values(userIdentity.sessionContext.attributes.mfaAuthenticated) as UsedMFA values(requestParameters.groupName) as Group_Name values(requestParameters.groupDescription) as Description values(region) as Region count by eventName user responseElements.groupId
+| sort - latest
+| convert ctime(earliest) ctime(latest) timeformat="%d/%m/%y %H:%M:%S"
+| table earliest latest user eventName UsedMFA Group_Name Description count
+```
+
+### Rule Policy Changes
+```
+index=*aws* sourcetype=aws:cloudtrail eventName IN (DeleteRolePolicy, UpdateAssumeRolePolicy) "*USER"
+| stats Earliest(_time) as Earliest Latest(_time) as Latest values(requestParameters.policyName) as Policy values(requestParameters.policyDocument) as Policy_Document count by userName awsRegion eventName requestParameters.roleName
+| fillnull value="N/A"
+| sort - latest
+| convert ctime(Earliest) ctime(Latest) timeformat="%H:%M:%S %d/%m/%y"
+```
+
+### PutRolePolicy
+```
+index=*aws* sourcetype=aws:cloudtrail eventName=PutRolePolicy userName="*USER"
+| table _time user_arn userName src_ip user_agent errorCode app eventName msg requestParameters.roleName requestParameters.policyName object requestParameters.policyDocument recipientAccountId
+| sort -_time
+```
+
+### AuthorizeSecurityGroupIngress/Egress
+```
+index=*aws* sourcetype=aws:cloudtrail eventName IN ("*SecurityGroupIngress", "*SecurityGroupEgress", "CreateSecurityGroup", "DeleteSecurityGroup") ("*USER*")
+| iplocation sourceIPAddress
+| rename requestParameters.securityGroupRuleIds.items{}.securityGroupRuleId as requestRuleId, responseElements.securityGroupRuleSet.items{}.securityGroupRuleId as responseRuleId, userIdentity.principalId as PrincipalID
+| eval RuleID=if(eventName=="RevokeSecurityGroupIngress",requestRuleId, responseRuleId)
+| stats  earliest(_time) as Earliest latest(_time) as Latest values(userIdentity.type) as LoginType values(userName) as ActualUser values(userAgent) as UserAgent values(msg) as Status values(requestParameters.groupId) as GroupID values(sourceIPAddress) as SourceIP values(requestParameters.ipPermissions.items{}.ipRanges.items{}.cidrIp) as CIDR values(requestParameters.ipPermissions.items{}.fromPort) as Source_Port values(requestParameters.ipPermissions.items{}.toPort) as Dest_Port values(requestParameters.ipPermissions.items{}.ipRanges.items{}.description) as Rule_Description values(RuleID) as RuleID by eventName aws_account_id PrincipalID userIdentity.accessKeyId
+| sort - latest
+| convert ctime(Earliest) ctime(Latest)
+| fields Earliest Latest aws_account_id eventName GroupID CIDR Source_Port Dest_Port Rule_Description RuleID ActualUser LoginType Status SourceIP PrincipalID userIdentity.accessKeyId
+| fillnull value="N/A"
+```
+
+### ChangePassword
+```
+index=*aws* sourcetype=aws:cloudtrail eventName=ChangePassword "*USER*"
+| table _time userIdentity.arn userName userIdentity.sessionContext.attributes.mfaAuthenticated
+| rename _time AS Time userIdentity.arn AS ARN userName as User userIdentity.sessionContext.attributes.mfaAuthenticated as Used_MFA
+| convert ctime(Time) timeformat="%H:%M:%S %d/%m/%y"
+```
+
+### PutBucketPublicAccessBlock
+```
+index=*aws* sourcetype="aws:cloudtrail" eventName=PutBucketPublicAccessBlock requestParameters.bucketName="BUCKET"
+| table _time eventName userIdentity.accessKeyId user userIdentity.sessionContext.sessionIssuer.userName userIdentity.sessionContext.attributes.mfaAuthenticated requestParameters.bucketName requestParameters.PublicAccessBlockConfiguration* user_agent
+| rename userIdentity.sessionContext.sessionIssuer.userName as AssumedRole userIdentity.sessionContext.attributes.mfaAuthenticated as UsedMFA
+```
+
+### AssumeRole
+```
+index=*aws* sourcetype=aws:cloudtrail eventName IN (AssumeRole) requestParameters.roleSessionName="ROLE_NAME"
+| stats earliest(_time) as earliest latest(_time) as latest values(responseElements.credentials.accessKeyId) as accessKey latest(responseElements.credentials.expiration) as expires by userName action
+| sort - latest
+| convert ctime(earliest) ctime(latest) timeformat="%d/%m/%y %H:%M:%S"
+```
+
+### Instance Information
+```
+index=*aws* sourcetype=aws:cloudtrail eventName IN ("RunInstances") "INSTANCE_ID"
+| fields responseElements.instancesSet.items{}.groupSet.items{}.groupName requestParameters.iamInstanceProfile.name responseElements.instancesSet.items{}.instanceId
+| rename responseElements.instancesSet.items{}.instanceId as instance responseElements.instancesSet.items{}.groupSet.items{}.groupName as instanceGroup requestParameters.iamInstanceProfile.name as instanceName
 ```
 
 {% include social-footer.html %}
