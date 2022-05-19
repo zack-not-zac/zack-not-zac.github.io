@@ -110,7 +110,6 @@ index=*aws* sourcetype=aws:cloudtrail eventName IN ("RunInstances") "INSTANCE_ID
 | convert ctime(Earliest) ctime(Latest) timeformat="%H:%M:%S %d/%m/%y"
 ```
 
-
 ### Check For Password Resets
 ```
 index=*win* EventCode IN (4722, 4723, 4724, 4725, 4726) user="USER*"
@@ -118,7 +117,6 @@ index=*win* EventCode IN (4722, 4723, 4724, 4725, 4726) user="USER*"
 | sort - latest
 | convert ctime(earliest) ctime(latest) timeformat="%d/%m/%y %H:%M:%S"
 ```
- 
 
 ### Check Installed Services Details:
 ```
@@ -127,7 +125,6 @@ index=*win* EventCode=4697 "HOST*"
 | sort - latest
 | convert ctime(earliest) ctime(latest) timeformat="%d/%m/%y %H:%M:%S"
 ```
- 
 
 ### View Details of Group Changes:
 ```
