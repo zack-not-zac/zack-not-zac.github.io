@@ -14,7 +14,7 @@ timezone: Europe/London
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: Zack-Not-Zac.github.io # the main title
+title: Zack-Not-Zac # the main title
 
 tagline: Cybersecurity Blog # it will display as the sub-title
 
