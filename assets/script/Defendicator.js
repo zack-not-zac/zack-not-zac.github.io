@@ -1,12 +1,13 @@
 //TODO
-// - Export array to CSV
 // - Add Hunting query generation
+// - Add error handling for invalid indicator types
 
 function formatIndicators(){
     const arrIndicators=document.getElementById("txtInput").value.split("\n")
     
     // CSV headers
     let arrOutput = ["IndicatorType,IndicatorValue,ExpirationTime,Action,Severity,Title,Description,RecommendedActions,RbacGroups,Category,MitreTechniques,GenerateAlert"]
+    let arrQueryIndicators = []
 
     for (const indicator of arrIndicators){
         let strIndicatorType = getIOCType(indicator)
@@ -29,6 +30,10 @@ function formatIndicators(){
         const strNewRow = strIndicatorType + "," + strIndicatorValue + "," + strExpirationTime + "," + strIndicatorAction + "," + strSeverity + "," + strTitle + "," + strDescription + "," + strRecommendedActions + "," + strRbacGroups + "," + strCategory + "," + strMitreTechniques + "," + strGenerateAlert
         // Append row to array
         arrOutput.push(strNewRow)
+        // Add to query indicators if option is selected
+        if (document.getElementById("chkQueryToggle").checked){
+            arrQueryIndicators.push(strIndicatorType + "," + strIndicatorValue)
+        }
     }
 
     // Join strings with newline
@@ -39,15 +44,94 @@ function formatIndicators(){
     if (document.getElementById("chkQueryToggle").checked){        
         // Generate queries
         let txtOutput = document.getElementById("txtQueryOutput")
-        txtOutput.value = generateAdvHuntQuery()
-
+        txtOutput.value = generateAdvHuntQuery(arrQueryIndicators)
         // Unhide paragraph
         document.getElementById("pQueryOutput").removeAttribute("hidden")
     }
 }
 
-function generateAdvHuntQuery(){
-    return "Testing"
+function generateAdvHuntQuery(arrQueryIndicators){
+    console.log("Adding Advanced Hunting queries...")
+
+    let arrSha256Hashes = []
+    let arrSha1Hashes = []
+    let arrMd5Hashes = []
+    let arrIpAddresses = []
+    let arrDomains = []
+    let strQueries = ""
+
+    for (const indicator of arrQueryIndicators){
+        const arrIndicatorTypeVal = indicator.split(",")
+        const strType = arrIndicatorTypeVal[0]
+        const strValue = arrIndicatorTypeVal[1]
+
+        if (strType === "FileSha256"){
+            arrSha256Hashes.push(strValue)
+        } else if (strType === "FileSha1") {
+            arrSha1Hashes.push(strValue)
+        } else if (strType === "FileMd5") {
+            arrMd5Hashes.push(strValue)
+        } else if (strType === "IpAddress") {
+            arrIpAddresses.push(strValue)
+        } else {
+            arrDomains.push(strValue)
+        }
+    }
+    // Generate file hash query
+    if (arrSha256Hashes.length > 0 || arrSha1Hashes > 0 || arrMd5Hashes > 0){
+        strQueries += setHashQuery(arrSha256Hashes, arrSha1Hashes, arrMd5Hashes) + "\n\n"
+    }
+    // Generate IP query
+    if (arrIpAddresses.length > 0){
+        strQueries += setIpQuery(arrIpAddresses) + "\n\n"
+    }
+    if (arrDomains.length > 0) {
+        strQueries += setDomainQuery(arrDomains)
+    }
+
+    return strQueries
+}
+
+function setHashQuery(arrSha256Hashes, arrSha1Hashes, arrMd5Hashes) {
+    let strHashWhereClause = "| where "
+    let strHashVariables = ""
+
+    if (arrSha256Hashes.length > 0){
+        strHashVariables += "let SHA256_IOCs = dynamic([\"" + arrSha256Hashes.join("\",\"") + "\"]);\n"
+        strHashWhereClause += "SHA256 in~ (SHA256_IOCs)"
+    }
+    // if any SHA1 values
+    if (arrSha1Hashes.length > 0){
+        strHashVariables += "let SHA1_IOCs = dynamic([\"" + arrSha256Hashes.join("\",\"") + "\"]);\n"
+        if (strHashWhereClause.length > 8){ // if query where clause is has other hash values
+            strHashWhereClause += " or "
+        }
+        strHashWhereClause += "SHA1 in~ (SHA1_IOCs)"
+    }
+    // if any MD5 values
+    if (arrMd5Hashes.length > 0){
+        strHashVariables += "let MD5_IOCs = dynamic([\"" + arrSha256Hashes.join("\",\"") + "\"]);\n"
+        if (strHashWhereClause.length > 8){ // if query where clause is has other hash values
+            strHashWhereClause += " or "
+        }
+        strHashWhereClause += "MD5 in~ (MD5_IOCs)"
+    }
+    // Create file hash query
+    const strFileQuery = "// File IOC Hunting\n" + strHashVariables + "union DeviceEvents, DeviceFileEvents, DeviceImageLoadEvents, EmailAttachmentInfo, DeviceProcessEvents\n" + strHashWhereClause + ")\n| sort by Timestamp asc"
+    console.log(strFileQuery)
+    return strFileQuery
+}
+
+function setIpQuery(arrIpAddresses){
+    const strQuery = "// IP IOC Hunting\nlet IOCs = dynamic([\"" + arrIpAddresses.join("\",\"") + "\"]);\nunion DeviceNetworkEvents, CloudAppEvents, AADSignInEventsBeta\n| where Timestamp > ago(30d) and (IPAddress in (IOCs) or RemoteIP in (IOCs))\n| sort by Timestamp asc"
+    console.log(strQuery)
+    return strQuery
+}
+
+function setDomainQuery(arrDomains){
+    const strQuery = "// Domain IOC Hunting\nlet IOCs = dynamic([\"" + arrDomains.join("\",\"") + "\"]);\nunion DeviceNetworkEvents, EmailUrlInfo, UrlClickEvents\n| where Timestamp > ago(30d) and (Url has_any (IOCs) or RemoteUrl has_any (IOCs) or AdditionalFields has_any (IOCs))\n| sort by Timestamp asc"
+    console.log(strQuery)
+    return strQuery
 }
 
 function getIOCType(strValue){

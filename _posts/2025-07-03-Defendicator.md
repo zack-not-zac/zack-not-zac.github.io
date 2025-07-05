@@ -9,7 +9,7 @@ permalink: "/Defendicator"
 <div id=divChooseMode>
     <input type=radio id=btnSimpleMode name="btnChooseMode" value="Simple" checked>
     <label for=btnSimpleMode>Simple Mode </label>
-    <input type=radio id=btnAdvMode name="btnChooseMode" value="Advanced" style="margin-left: 2%">
+    <input type=radio id=btnAdvMode name="btnChooseMode" value="Advanced" style="margin-left: 10px">
     <label for=btnAdvMode>Advanced Mode </label>
 </div>
 <div id=divOptions hidden>
@@ -23,7 +23,7 @@ permalink: "/Defendicator"
 <div style="margin-top: 10px">
     <textarea id=txtInput name=txtInput rows=10 cols=75 required autofocus placeholder="Paste your IOC's here - your data is never sent to remote servers."></textarea>
 </div>
-<div id=divButtons>
+<div id=divButtons style="margin-top: 10px">
     <input type=submit id=btnSubmit value=Submit onclick="formatIndicators()">
     <a id=formDownload>
         <input type=submit id=btnDownload value=Save hidden>
