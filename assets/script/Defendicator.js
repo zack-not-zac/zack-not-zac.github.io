@@ -1,11 +1,10 @@
-//TODO
-// - Indicator de-duplication
-
 function formatIndicators(){
     const arrIndicators=document.getElementById("txtInput").value.split("\n");
     
     // CSV headers
     let arrOutput = new Set(["IndicatorType,IndicatorValue,ExpirationTime,Action,Severity,Title,Description,RecommendedActions,RbacGroups,Category,MitreTechniques,GenerateAlert"]);
+    
+    // Variable initialisation
     let arrQueryIndicators = new Set();
     const strTitle = getTxtInput("txtIndicatorTitle",true);
     const strDescription = getTxtInput("txtIndicatorDescription",true);

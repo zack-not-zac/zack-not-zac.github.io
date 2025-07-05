@@ -3,7 +3,7 @@ title: Defendicator - Defender IOC Formatter
 description: Defendicator - the tool to help you format IOC's for Microsoft Defender XDR on your device.
 date: 2025-07-03
 categories: [Tools]
-tags: [Microsoft Security]
+tags: [Microsoft Security, developer]
 permalink: "/Defendicator"
 ---
 <div id=divChooseMode>
