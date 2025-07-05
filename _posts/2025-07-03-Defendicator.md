@@ -9,7 +9,7 @@ permalink: "/Defendicator"
 <div id=divChooseMode>
     <input type=radio id=btnSimpleMode name="btnChooseMode" value="Simple" checked>
     <label for=btnSimpleMode>Simple Mode </label>
-    <input type=radio id=btnAdvMode name="btnChooseMode" value="Advanced">
+    <input type=radio id=btnAdvMode name="btnChooseMode" value="Advanced" style="margin-left: 2%">
     <label for=btnAdvMode>Advanced Mode </label>
 </div>
 <div id=divOptions hidden>
@@ -20,7 +20,7 @@ permalink: "/Defendicator"
     <input type=checkbox id=chkAlertsToggle value="1" label="Generate alerts for indicator events" checked/>
     <label for="chkAlertsToggle">Generate alerts for indicator events</label><br>
 </div>
-<div>
+<div style="margin-top: 10px">
     <textarea id=txtInput name=txtInput rows=10 cols=75 required autofocus placeholder="Paste your IOC's here - your data is never sent to remote servers."></textarea>
 </div>
 <div id=divButtons>
@@ -41,7 +41,7 @@ permalink: "/Defendicator"
     let objChooseMode = document.getElementById("divChooseMode")
     objChooseMode.addEventListener('change',function(){
         if (document.getElementById("btnAdvMode").checked) {
-            console.log("Switching to simple mode...")
+            console.log("Switching to advanced mode...")
             document.getElementById("divOptions").hidden = false
         } else {
             console.log("Switching to simple mode...")
