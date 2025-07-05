@@ -6,6 +6,7 @@ function formatIndicators(){
     
     // Variable initialisation
     let arrQueryIndicators = new Set();
+    const intExpiry = parseInt(getTxtInput("txtExpiry"));
     const strTitle = getTxtInput("txtIndicatorTitle",true);
     const strDescription = getTxtInput("txtIndicatorDescription",true);
     const strRecommendedActions = getTxtInput("txtIndicatorRecommendedActions");
@@ -19,10 +20,15 @@ function formatIndicators(){
         isUrlConversion = true;
     }
 
+    if (isNaN(intExpiry)){
+        alert("Invalid number of days entered for expiry.");
+        throw new Error ("Invalid number of days entered for expiry.");
+    }
+
     for (const indicator of arrIndicators){
         // Remove defanging of IPs, domains, etc.
         const strIndicatorDefang = indicator.replace("[.]",".");
-        let strIndicatorValue = ""
+        let strIndicatorValue = "";
         let strIndicatorType = getIOCType(strIndicatorDefang);
 
         if (isUrlConversion && strIndicatorType === "Url"){
@@ -31,7 +37,7 @@ function formatIndicators(){
             strIndicatorValue = strIndicatorDefang;
         }
 
-        const strExpirationTime = getExpirationDate();
+        const strExpirationTime = getExpirationDate(strIndicatorType,intExpiry);
         const strIndicatorAction = getIOCAction(strIndicatorType);
         const strSeverity = getIOCSeverity(strIndicatorType);
 
@@ -46,6 +52,13 @@ function formatIndicators(){
         if (document.getElementById("chkQueryToggle").checked){
             arrQueryIndicators.add(strIndicatorType + "," + strIndicatorValue);
         }
+    }
+
+    // Check for array exceeding Defender maximum (500 IOC's per import)
+    const intMaxIndicatorsPerImport = 500
+    if (arrOutput.size > intMaxIndicatorsPerImport + 1) {
+        alert("Too many samples (" + arrOutput.size.toString() + "). Maximum is " + intMaxIndicatorsPerImport.toString())
+        throw new Error ("Too many samples (" + arrOutput.size.toString() + "). Maximum is " + intMaxIndicatorsPerImport.toString())
     }
 
     // Join strings with newline
@@ -185,11 +198,18 @@ function getDomainFromUrl(strValue){
     return strDomain;
 }
 
-function getExpirationDate(){
+function getExpirationDate(strIndicatorType,intExpiry){
     let dateExpiration = new Date();
 
-    // Add 90 days for expiration
-    dateExpiration.setDate(dateExpiration.getDate()+90);
+    if (isNaN(intExpiry)){
+        if (strIndicatorType.startsWith("File")){       // 1 year expiry for file hashes
+            dateExpiration.setDate(dateExpiration.getDate()+365);
+        } else {   // default 90 day for other indicators
+            dateExpiration.setDate(dateExpiration.getDate()+90);
+        }
+    } else {
+        dateExpiration.setDate(dateExpiration.getDate()+intExpiry)
+    }
     return dateExpiration.toISOString();
 }
 

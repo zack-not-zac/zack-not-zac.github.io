@@ -24,6 +24,8 @@ permalink: "/Defendicator"
         <input type=text id=txtIndicatorRbacGroups placeholder="e.g 'Group1,Group2'" style="width:100%; margin:5px">
         <label for=txtIndicatorTechniques>MITRE Techniques: </label>
         <input type=text id=txtIndicatorTechniques placeholder="e.g 'T1566'" style="width:100%; margin:5px">
+        <label for=txtExpiry>Days Until Expiry: </label>
+        <input type=number id=txtExpiry placeholder=90 style="width:100%; margin:5px">
     </div>
     <div id=divOptionsSelect style="margin:5px">
         <label for=txtIndicatorCategory>Indicator Category: </label>
