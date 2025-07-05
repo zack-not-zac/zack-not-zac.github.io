@@ -217,16 +217,23 @@ function downloadCSV(strCsvData){
     let strBlobUrl = URL.createObjectURL(blob)
     console.log(strBlobUrl)
 
-    // Create DOM object
-    objDownloadBtn = document.getElementById("btnDownload")
-    objDownloadForm = document.getElementById("formDownload")
+    // Get button div
+    objBtnDiv = document.getElementById("divButtons")
 
-    // Add download URL to form
-    objDownloadForm.href = strBlobUrl
-    objDownloadForm.setAttribute('download',strDateNow + "_indicators.csv")
+    // Create anchor for download
+    let objDownloadAnchor = document.createElement("a")
+    objDownloadAnchor.href = strBlobUrl
+    objDownloadAnchor.setAttribute('download',strDateNow + "_indicators.csv")
+    objBtnDiv.appendChild(objDownloadAnchor)
 
-    // Unhide button
-    objDownloadBtn.removeAttribute("hidden")
+    // Create download button
+    let objDownloadBtn = document.createElement("input")
+    objDownloadBtn.type = "submit"
+    objDownloadBtn.id = "btnDownload"
+    objDownloadBtn.value = "Save"
+    objDownloadAnchor.appendChild(objDownloadBtn)
+
+    // Click button to download file
     objDownloadBtn.click()
 
     return strBlobUrl
