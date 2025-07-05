@@ -102,7 +102,7 @@ function setHashQuery(arrSha256Hashes, arrSha1Hashes, arrMd5Hashes) {
     }
     // if any SHA1 values
     if (arrSha1Hashes.length > 0){
-        strHashVariables += "let SHA1_IOCs = dynamic([\"" + arrSha256Hashes.join("\",\"") + "\"]);\n";
+        strHashVariables += "let SHA1_IOCs = dynamic([\"" + arrSha1Hashes.join("\",\"") + "\"]);\n";
         if (strHashWhereClause.length > 8){ // if query where clause is has other hash values
             strHashWhereClause += " or ";
         }
@@ -110,7 +110,7 @@ function setHashQuery(arrSha256Hashes, arrSha1Hashes, arrMd5Hashes) {
     }
     // if any MD5 values
     if (arrMd5Hashes.length > 0){
-        strHashVariables += "let MD5_IOCs = dynamic([\"" + arrSha256Hashes.join("\",\"") + "\"]);\n";
+        strHashVariables += "let MD5_IOCs = dynamic([\"" + arrMd5Hashes.join("\",\"") + "\"]);\n";
         if (strHashWhereClause.length > 8){ // if query where clause is has other hash values
             strHashWhereClause += " or ";
         }
