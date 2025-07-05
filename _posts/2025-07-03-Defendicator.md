@@ -61,7 +61,7 @@ permalink: "/Defendicator"
 </div>
 <div id=divButtons style="margin-top: 10px">
     <input type=submit id=btnSubmit value=Submit onclick="formatIndicators()">
-    <a id=formDownload>
+    <a href=none id=formDownload>
         <input type=submit id=btnDownload value=Save hidden>
     </a>
 </div>
