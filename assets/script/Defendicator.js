@@ -1,6 +1,6 @@
 //TODO
 // - Add error handling for invalid indicator types
-// - 
+// - Indicator de-duplication
 
 function formatIndicators(){
     const arrIndicators=document.getElementById("txtInput").value.split("\n");
