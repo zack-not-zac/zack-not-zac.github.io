@@ -1,5 +1,5 @@
 //TODO
-// - Add Hunting query generation
+// - Add additional IOC fields
 // - Add error handling for invalid indicator types
 
 function formatIndicators(){
@@ -15,12 +15,12 @@ function formatIndicators(){
         const strExpirationTime = getExpirationDate()
         const strIndicatorAction = getIOCAction(strIndicatorType)
         const strSeverity = getIOCSeverity(strIndicatorType)
-        const strTitle = "Possible Indicator of Compromise Observed"
-        const strDescription = "This indicator was added by another user & may indicate malicious activity."
-        const strRecommendedActions = ""
-        const strRbacGroups = ""
-        const strCategory = "Malware"
-        const strMitreTechniques = ""
+        const strTitle = getTxtInput("txtIndicatorTitle",true)
+        const strDescription = getTxtInput("txtIndicatorDescription",true)
+        const strRecommendedActions = getTxtInput("txtIndicatorRecommendedActions")
+        const strRbacGroups = getTxtInput("txtIndicatorRbacGroups")
+        const strCategory = getIOCCategory()
+        const strMitreTechniques = getTxtInput("txtIndicatorTechniques")
         const strGenerateAlert = isGenerateAlert()
 
         if (strIndicatorType === "Url" && document.getElementById("chkUrlConvertToggle").checked){
@@ -46,7 +46,7 @@ function formatIndicators(){
         let txtOutput = document.getElementById("txtQueryOutput")
         txtOutput.value = generateAdvHuntQuery(arrQueryIndicators)
         // Unhide paragraph
-        document.getElementById("pQueryOutput").removeAttribute("hidden")
+        document.getElementById("divQueryOutput").removeAttribute("hidden")
     }
 }
 
@@ -230,4 +230,24 @@ function downloadCSV(strCsvData){
     objDownloadBtn.click()
 
     return strBlobUrl
+}
+
+function getTxtInput(strElementId, usePlaceholder=false){
+    const objTxtInput = document.getElementById(strElementId)
+    if (objTxtInput.value.length > 0) {
+        console.log(strElementId + " has been set to '" + objTxtInput.value + "'")
+        return objTxtInput.value
+    } else if (usePlaceholder) {
+        console.log(strElementId + " has been set to '" + objTxtInput.placeholder + "'")
+        return objTxtInput.placeholder
+    } else {
+        console.log("No input found for " + strElementId + " & usePlaceholder is false.")
+        return ""
+    }
+}
+
+function getIOCCategory(){
+    const strCategory = document.getElementById("txtIndicatorCategory").value
+    console.log("Chosen IOC category: " + strCategory)
+    return strCategory
 }
