@@ -5,8 +5,8 @@ function formatIndicators(){
     const arrIndicators=document.getElementById("txtInput").value.split("\n");
     
     // CSV headers
-    let arrOutput = ["IndicatorType,IndicatorValue,ExpirationTime,Action,Severity,Title,Description,RecommendedActions,RbacGroups,Category,MitreTechniques,GenerateAlert"];
-    let arrQueryIndicators = [];
+    let arrOutput = new Set(["IndicatorType,IndicatorValue,ExpirationTime,Action,Severity,Title,Description,RecommendedActions,RbacGroups,Category,MitreTechniques,GenerateAlert"]);
+    let arrQueryIndicators = new Set();
     const strTitle = getTxtInput("txtIndicatorTitle",true);
     const strDescription = getTxtInput("txtIndicatorDescription",true);
     const strRecommendedActions = getTxtInput("txtIndicatorRecommendedActions");
@@ -42,15 +42,15 @@ function formatIndicators(){
         // Join all strings as CSV values
         const strNewRow = strIndicatorType + "," + strIndicatorValue + "," + strExpirationTime + "," + strIndicatorAction + "," + strSeverity + "," + strTitle + "," + strDescription + "," + strRecommendedActions + "," + strRbacGroups + "," + strCategory + "," + strMitreTechniques + "," + strGenerateAlert;
         // Append row to array
-        arrOutput.push(strNewRow);
+        arrOutput.add(strNewRow);
         // Add to query indicators if option is selected
         if (document.getElementById("chkQueryToggle").checked){
-            arrQueryIndicators.push(strIndicatorType + "," + strIndicatorValue);
+            arrQueryIndicators.add(strIndicatorType + "," + strIndicatorValue);
         }
     }
 
     // Join strings with newline
-    strCSV = arrOutput.join("\n");
+    strCSV = Array.from(arrOutput).join("\n");
     strBlobUrl = downloadCSV(strCSV);
 
     // Advanced hunting queries toggle
