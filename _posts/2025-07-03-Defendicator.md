@@ -73,11 +73,11 @@ permalink: "/Defendicator"
 <script>
     document.getElementById("divChooseMode").addEventListener('change',function(){
         if (document.getElementById("btnAdvMode").checked) {
-            console.log("Switching to advanced mode...")
-            document.getElementById("divOptions").hidden = false
+            console.log("Switching to advanced mode...");
+            document.getElementById("divOptions").hidden = false;
         } else {
-            console.log("Switching to simple mode...")
-            document.getElementById("divOptions").hidden = true
+            console.log("Switching to simple mode...");
+            document.getElementById("divOptions").hidden = true;
         }
     })
 </script>
