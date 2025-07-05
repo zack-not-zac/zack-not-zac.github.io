@@ -1,5 +1,4 @@
 //TODO
-// - Add error handling for invalid indicator types
 // - Indicator de-duplication
 
 function formatIndicators(){
@@ -8,22 +7,36 @@ function formatIndicators(){
     // CSV headers
     let arrOutput = ["IndicatorType,IndicatorValue,ExpirationTime,Action,Severity,Title,Description,RecommendedActions,RbacGroups,Category,MitreTechniques,GenerateAlert"];
     let arrQueryIndicators = [];
+    const strTitle = getTxtInput("txtIndicatorTitle",true);
+    const strDescription = getTxtInput("txtIndicatorDescription",true);
+    const strRecommendedActions = getTxtInput("txtIndicatorRecommendedActions");
+    const strRbacGroups = getTxtInput("txtIndicatorRbacGroups");
+    const strCategory = getIOCCategory();
+    const strMitreTechniques = getTxtInput("txtIndicatorTechniques");
+    const strGenerateAlert = isGenerateAlert();
+    let isUrlConversion = false;
+    // set isConvertedUrl if IOC is to be converted from URL to domain
+    if (document.getElementById("chkUrlConvertToggle").checked){
+        isUrlConversion = true;
+    }
 
     for (const indicator of arrIndicators){
-        let strIndicatorType = getIOCType(indicator);
-        const strIndicatorValue = cleanIOC(indicator,strIndicatorType);
+        // Remove defanging of IPs, domains, etc.
+        const strIndicatorDefang = indicator.replace("[.]",".");
+        let strIndicatorValue = ""
+        let strIndicatorType = getIOCType(strIndicatorDefang);
+
+        if (isUrlConversion && strIndicatorType === "Url"){
+            strIndicatorValue = getDomainFromUrl(strIndicatorDefang);
+        } else {
+            strIndicatorValue = strIndicatorDefang;
+        }
+
         const strExpirationTime = getExpirationDate();
         const strIndicatorAction = getIOCAction(strIndicatorType);
         const strSeverity = getIOCSeverity(strIndicatorType);
-        const strTitle = getTxtInput("txtIndicatorTitle",true);
-        const strDescription = getTxtInput("txtIndicatorDescription",true);
-        const strRecommendedActions = getTxtInput("txtIndicatorRecommendedActions");
-        const strRbacGroups = getTxtInput("txtIndicatorRbacGroups");
-        const strCategory = getIOCCategory();
-        const strMitreTechniques = getTxtInput("txtIndicatorTechniques");
-        const strGenerateAlert = isGenerateAlert();
 
-        if (strIndicatorType === "Url" && document.getElementById("chkUrlConvertToggle").checked){
+        if (isUrlConversion && strIndicatorType === "Url"){
             strIndicatorType = "DomainName";
         }
         // Join all strings as CSV values
@@ -163,17 +176,14 @@ function getIOCType(strValue){
             i++;
         }
     }
+    alert("No valid IOC type found for '" + strValue + "'")
+    throw new Error ("No valid IOC type found for '" + strValue + "', exiting...");
 }
 
-function cleanIOC(strValue,strType){
-    // Remove defanging
-    let strCleanedIOC = strValue.replace("[.]",".");
-
+function getDomainFromUrl(strValue){
     // Convert URL to domain
-    if (strType === "Url" && document.getElementById("chkUrlConvertToggle").checked){
-        strCleanedIOC = strCleanedIOC.match(/([\w\.\-]+\.[\w\-]+(?=\/|:|$))/g)[0];
-    }
-    return strCleanedIOC;
+    strDomain = strValue.match(/([\w\.\-]+\.[\w\-]+(?=\/|:|$))/g)[0];
+    return strDomain;
 }
 
 function getExpirationDate(){
@@ -215,7 +225,6 @@ function downloadCSV(strCsvData){
     // Define new data blob (https://transcoding.org/javascript/export-to-csv/)
     let blob = new Blob([strCSV], { type: 'text/csv;charset=utf-8;' });
     let strBlobUrl = URL.createObjectURL(blob);
-    console.log(strBlobUrl);
 
     // Get button div
     objBtnDiv = document.getElementById("divButtons");
