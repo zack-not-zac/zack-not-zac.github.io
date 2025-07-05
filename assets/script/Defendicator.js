@@ -1,6 +1,6 @@
 //TODO
-// - Add additional IOC fields
 // - Add error handling for invalid indicator types
+// - 
 
 function formatIndicators(){
     const arrIndicators=document.getElementById("txtInput").value.split("\n")
@@ -231,6 +231,7 @@ function downloadCSV(strCsvData){
     objDownloadBtn.type = "submit"
     objDownloadBtn.id = "btnDownload"
     objDownloadBtn.value = "Save"
+    objDownloadBtn.style = "margin-left:5px"
     objDownloadAnchor.appendChild(objDownloadBtn)
 
     // Click button to download file

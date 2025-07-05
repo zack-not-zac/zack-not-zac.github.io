@@ -71,8 +71,7 @@ permalink: "/Defendicator"
 <script type="text/javascript" src="/assets/script/Defendicator.js"></script>
 
 <script>
-    let objChooseMode = document.getElementById("divChooseMode")
-    objChooseMode.addEventListener('change',function(){
+    document.getElementById("divChooseMode").addEventListener('change',function(){
         if (document.getElementById("btnAdvMode").checked) {
             console.log("Switching to advanced mode...")
             document.getElementById("divOptions").hidden = false
