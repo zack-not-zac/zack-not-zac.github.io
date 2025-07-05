@@ -1,5 +1,6 @@
 //TODO
-// - Finish remaining IOC columns
+// - Export array to CSV
+// - Add Hunting query generation
 
 function formatIndicators(){
     const arrIndicators=document.getElementById("txtInput").value.split("\n")
@@ -8,11 +9,31 @@ function formatIndicators(){
     let arrOutput = ["IndicatorType,IndicatorValue,ExpirationTime,Action,Severity,Title,Description,RecommendedActions,RbacGroups,Category,MitreTechniques,GenerateAlert"]
 
     for (const indicator of arrIndicators){
-        const strIndicatorType = getIOCType(indicator)
+        let strIndicatorType = getIOCType(indicator)
         const strIndicatorValue = cleanIOC(indicator,strIndicatorType)
         const strExpirationTime = getExpirationDate()
-        
+        const strIndicatorAction = getIOCAction(strIndicatorType)
+        const strSeverity = getIOCSeverity(strIndicatorType)
+        const strTitle = "Possible Indicator of Compromise Observed"
+        const strDescription = "This indicator was added by another user & may indicate malicious activity."
+        const strRecommendedActions = ""
+        const strRbacGroups = ""
+        const strCategory = "Malware"
+        const strMitreTechniques = ""
+        const strGenerateAlert = isGenerateAlert()
+
+        if (strIndicatorType === "Url" && document.getElementById("chkUrlConvertToggle").checked){
+            strIndicatorType = "DomainName"
+        }
+        // Join all strings as CSV values
+        const strNewRow = strIndicatorType + "," + strIndicatorValue + "," + strExpirationTime + "," + strIndicatorAction + "," + strSeverity + "," + strTitle + "," + strDescription + "," + strRecommendedActions + "," + strRbacGroups + "," + strCategory + "," + strMitreTechniques + "," + strGenerateAlert
+        // Append row to array
+        arrOutput.push(strNewRow)
     }
+
+    // Join strings with newline
+    strCSV = arrOutput.join("\n")
+    strBlobUrl = downloadCSV(strCSV)
 
     // Advanced hunting queries toggle
     if (document.getElementById("chkQueryToggle").checked){        
@@ -77,4 +98,52 @@ function getExpirationDate(){
     // Add 90 days for expiration
     dateExpiration.setDate(dateExpiration.getDate()+90)
     return dateExpiration.toISOString()
+}
+
+function getIOCAction(strType){
+    if (strType.startsWith("File")){
+        return "BlockAndRemediate"
+    } else {
+        return "Block"
+    }
+}
+
+function getIOCSeverity(strType){
+    if (strType.startsWith("File")){
+        return "Medium"
+    } else {
+        return "Low"
+    }
+}
+
+function isGenerateAlert(){
+    if (document.getElementById("chkQueryToggle").checked){
+        return "TRUE"
+    } else {
+        return "FALSE"
+    }
+}
+
+function downloadCSV(strCsvData){
+    const dateNow = new Date()
+    const strDateNow = dateNow.toISOString()
+    const strFileName = strDateNow + "_indicators.csv"
+    // Define new data blob (https://transcoding.org/javascript/export-to-csv/)
+    let blob = new Blob([strCSV], { type: 'text/csv;charset=utf-8;' });
+    let strBlobUrl = URL.createObjectURL(blob)
+    console.log(strBlobUrl)
+
+    // Create DOM object
+    objDownloadBtn = document.getElementById("btnDownload")
+    objDownloadForm = document.getElementById("formDownload")
+
+    // Add download URL to form
+    objDownloadForm.href = strBlobUrl
+    objDownloadForm.setAttribute('download',strDateNow + "_indicators.csv")
+
+    // Unhide button
+    objDownloadBtn.removeAttribute("hidden")
+    objDownloadBtn.click()
+
+    return strBlobUrl
 }
