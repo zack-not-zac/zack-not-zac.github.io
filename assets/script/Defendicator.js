@@ -27,7 +27,7 @@ function formatIndicators(){
 
     for (const indicator of arrIndicators){
         // Remove defanging of IPs, domains, etc.
-        const strIndicatorDefang = indicator.replace("[.]",".");
+        const strIndicatorDefang = indicator.replaceAll("[.]",".");
         let strIndicatorValue = "";
         let strIndicatorType = getIOCType(strIndicatorDefang);
 
