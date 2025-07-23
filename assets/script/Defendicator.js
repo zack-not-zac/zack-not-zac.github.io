@@ -6,9 +6,9 @@ function formatIndicators(){
     
     // Variable initialisation
     let arrQueryIndicators = new Set();
-    const intExpiry = parseInt(getTxtInput("txtExpiry"));
-    const strTitle = getTxtInput("txtIndicatorTitle",true);
-    const strDescription = getTxtInput("txtIndicatorDescription",true);
+    const intExpiry = parseInt(getTxtInput("txtExpiry",usePlaceholder=true));
+    const strTitle = getTxtInput("txtIndicatorTitle",usePlaceholder=true);
+    const strDescription = getTxtInput("txtIndicatorDescription",usePlaceholder=true);
     const strRecommendedActions = getTxtInput("txtIndicatorRecommendedActions");
     const strRbacGroups = getTxtInput("txtIndicatorRbacGroups");
     const strCategory = getIOCCategory();
@@ -19,7 +19,7 @@ function formatIndicators(){
     if (document.getElementById("chkUrlConvertToggle").checked){
         isUrlConversion = true;
     }
-
+    
     if (isNaN(intExpiry)){
         alert("Invalid number of days entered for expiry.");
         throw new Error ("Invalid number of days entered for expiry.");
